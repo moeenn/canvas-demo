@@ -44,7 +44,7 @@ function getContext(canvas) {
     throw new Error("failed to get canvas context")
   }
 
-  const {height, width} = canvas.getBoundingClientRect()
+  const { height, width } = canvas.getBoundingClientRect()
   ctx.canvas.height = height
   ctx.canvas.width = width
   return { ctx, width, height }
@@ -56,7 +56,7 @@ function getContext(canvas) {
  * @returns {number}
  */
 function random(min, max) {
-  const f =  Math.random() * (max - min) + min
+  const f = Math.random() * (max - min) + min
   return Math.ceil(f)
 }
 
@@ -68,9 +68,69 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+/**
+ * @param {boolean} condition 
+ * @param {string} error 
+ * @returns {asserts condition}
+ */
+function assert(condition, error) {
+  if (!condition) {
+    throw new Error(error)
+  }
+}
+
+class Color {
+  /** @type {number} */
+  #red
+
+  /** @type {number} */
+  #green
+
+  /** @type {number} */
+  #blue
+
+  /** @type {number} */
+  #alpha = 1.0
+
+  /**
+   * @param {number} r 
+   * @param {number} g 
+   * @param {number} b 
+   * @param {number | null} a 
+   */
+  constructor(r, g, b, a = null) {
+    assert(r >= 0 && r <= 255, "red must be between 0-255")
+    assert(g >= 0 && g <= 255, "green must be between 0-255")
+    assert(b >= 0 && b <= 255, "blue must be between 0-255")
+    if (a != null) {
+      assert(a >= 0.0 && a <= 1.0, "alpha must be between 0.0-1.0")
+    }
+
+    this.#red = r
+    this.#green = g
+    this.#blue = b
+    
+    if (a != null) {
+      this.#alpha = a
+    }
+  }
+
+  /**
+   * @return {string}
+   */
+  toHex() {
+    const rHex = this.#red.toString(16).padStart(2, "0")
+    const gHex = this.#green.toString(16).padStart(2, "0")
+    const bHex = this.#blue.toString(16).padStart(2, "0")
+    const aHex = Math.round(this.#alpha * 255).toString(16).padStart(2, "0")
+
+    return `#${rHex}${gHex}${bHex}${aHex}`
+  }
+}
+
 class Position {
   /** @type {number} */
-  x 
+  x
 
   /** @type {number} */
   y
@@ -92,8 +152,8 @@ class Particle {
   /** @type {number} */
   size = 3
 
-  /** @type {string} */
-  color = "hsl(120, 84%, 50%)"
+  /** @type {Color} */
+  color = new Color(20, 235, 20)
 
   /**
    * @param {number} windowWidth 
@@ -117,7 +177,7 @@ class Particle {
   render(ctx) {
     const path = new Path2D()
     path.rect(this.position.x, this.position.y, this.size, this.size)
-    ctx.fillStyle = this.color
-    ctx.fill(path) 
+    ctx.fillStyle = this.color.toHex()
+    ctx.fill(path)
   }
 }
