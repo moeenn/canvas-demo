@@ -5,14 +5,11 @@ import { random } from "./misc.mjs"
 import { Dimentions } from "./dimentions.mjs"
 
 export class Particle {
-  /** @type {string} */
-  id = crypto.randomUUID()
-
   /** @type {Position} */
   position
 
   /** @type {number} */
-  size = 4
+  size = 2
 
   /** @type {Color} */
   color = Colors.Orange
@@ -31,10 +28,10 @@ export class Particle {
    * @returns {void}
    */
   render(ctx) {
-    const path = new Path2D()
-    path.rect(this.position.x - (this.size/2), this.position.y - (this.size/2), this.size, this.size)
+    ctx.beginPath()
+    ctx.arc(this.position.x - (this.size/2), this.position.y - (this.size/2), this.size, 0, 2 * Math.PI)
     ctx.fillStyle = this.color.toHex()
-    ctx.fill(path)
+    ctx.fill()
   }
 }
 

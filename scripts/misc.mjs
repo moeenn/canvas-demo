@@ -50,3 +50,15 @@ export function assert(condition, error) {
     throw new Error(error)
   }
 }
+
+/**
+ * @param {string} selector 
+ * @returns {string}
+ * @throws {Error}
+ */
+export function readInput(selector) {
+  const element = document.querySelector(selector)
+  assert(element != null, `element with selector ${selector} not found`)
+  assert(element.constructor == HTMLInputElement, `selector ${selector} does not refer to an input element`)
+  return (/** @type {HTMLInputElement} */ (element)).value
+}

@@ -28,11 +28,21 @@ main {
     padding: var(--space);
     background-color: var(--grey-one);
 
-    button {
+    input[type="number"] {
       font-size: var(--text-size-sm);
       padding: 0.3rem 0.8rem;
+      border-radius: var(--border-radius);    
+      background-color: white;
+      margin: 0 calc(var(--space) / 6);
+    }
+
+    button {
+      font-size: var(--text-size-sm);
+      padding: 0.3rem 1.5rem;
       border-radius: var(--border-radius);
       cursor: pointer;
+      background-color: green;
+      color: white;
 
       &:hover {
         background-color: var(--grey-two);
@@ -44,8 +54,8 @@ main {
   }
 
   canvas {  
-    height: 80%;
-    width: 90%;
+    height: 85%;
+    width: 96%;
     margin: auto;
     background-color: var(--canvas-bg);
     border-radius: var(--border-radius);

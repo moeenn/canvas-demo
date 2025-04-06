@@ -1,9 +1,8 @@
 //@ts-check
-import { getContext, assert, sleep } from "./scripts/misc.mjs"
+import { getContext, assert, sleep, readInput } from "./scripts/misc.mjs"
 import { Particle, ParticleWalker } from "./scripts/particle.mjs"
-import { Position } from "./scripts/position.mjs"
-import { Line } from "./scripts/line.mjs"
 import { Dimentions } from "./scripts/dimentions.mjs"
+import { Line } from "./scripts/line.mjs"
 document.addEventListener("DOMContentLoaded", main)
 
 /** 
@@ -19,40 +18,76 @@ async function main() {
 
   const { ctx, width, height } = getContext(canvas)
   const canvasSize = new Dimentions(width, height)
-  const maxCount = 50
 
-  /** @type {Map<string, {particle: Particle; walker: ParticleWalker}>} */
-  const entities = new Map()
-
-  /** @type {number} */
-  let i
-
-  /** @type {Particle} */
-  let particle
-  
-  /** @type {ParticleWalker} */
-  let walker
-  
-  for (i = 0; i < maxCount; i++) {
-    particle = new Particle(canvasSize)
-    walker = new ParticleWalker(canvasSize, 2)
-    entities.set(particle.id, { particle, walker })
-  }
-
-  let lastParticlePosition = new Position(0, 0)
   startButton.addEventListener("click", async () => {
+    const speed = parseFloat(readInput("[data-speed]"))
+    const particleCount = parseFloat(readInput("[data-particle-count]"))
+    const distanceThreshold = parseFloat(readInput("[data-distance-threshold]"))
+
+    /** @type {Particle[]} */
+    const particles = []
+
+    /** @type {ParticleWalker[]} */
+    const walkers = []
+
+    /** @type {number} */
+    let i
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle(canvasSize))
+      walkers.push(new ParticleWalker(canvasSize, speed))
+    }
+
+    /** @type {Particle} */
+    let particle
+
     startButton.disabled = true
     while (true) {
       await sleep(16.6) // 60 FPS
       ctx.clearRect(0, 0, width, height)
 
-      for ({ particle, walker } of entities.values()) {
+      for (i = 0; i < particleCount; i++) {
+        particle = particles[i]
+        drawProximity(ctx, distanceThreshold, particles)
         particle.render(ctx)
-        walker.walkParticle(particle)
-        Line.render(ctx, lastParticlePosition, particle.position)
-        lastParticlePosition = particle.position
+        walkers[i].walkParticle(particle)
       }
     }
   })
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {number} proximity 
+ * @param {Particle[]} particles 
+ * @returns {void}
+ */
+function drawProximity(ctx, proximity, particles) {
+  const size = particles.length
+
+  /** @type {number} */
+  let i = 0, j = 1
+
+  /** @type {Particle} */
+  let a
+  
+  /** @type {Particle} */  
+  let b
+
+  while (i < j) {
+    a = particles[i]
+    b = particles[j]
+    if (a.position.distance(b.position) <= proximity) {
+      Line.render(ctx, a.position, b.position)
+    }
+
+    // increment counts.
+    j++
+    if (j == size) {
+      i++
+      j = i+1
+    }
+
+    if (i == (size-1)) break
+  }
 }
 

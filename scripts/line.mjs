@@ -4,7 +4,7 @@ import { Position } from "./position.mjs"
 
 export class Line {
   /** @type {Color} */
-  static color = Colors.Red
+  static color = Colors.OrangeTransparent
 
   /**
    * @param {CanvasRenderingContext2D} ctx 
