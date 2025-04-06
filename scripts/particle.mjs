@@ -2,8 +2,12 @@
 import { Position } from "./position.mjs"
 import { Colors, Color } from "./color.mjs"
 import { random } from "./misc.mjs"
+import { Dimentions } from "./dimentions.mjs"
 
 export class Particle {
+  /** @type {string} */
+  id = crypto.randomUUID()
+
   /** @type {Position} */
   position
 
@@ -14,12 +18,11 @@ export class Particle {
   color = Colors.Orange
 
   /**
-   * @param {number} windowWidth 
-   * @param {number} windowHeight 
+   * @param {Dimentions} canvasSize 
    */
-  constructor(windowWidth, windowHeight) {
-    const x = random(0, windowWidth)
-    const y = random(0, windowHeight)
+  constructor(canvasSize) {
+    const x = random(0, canvasSize.width)
+    const y = random(0, canvasSize.height)
     this.position = new Position(x, y)
   }
 
@@ -42,19 +45,15 @@ export class ParticleWalker {
   /** @type {number} */
   #ySpeed  
 
-  /** @type {number} */
-  screenWidth
-
-  /** @type {number} */
-  screenHeight
+  /** @type {Dimentions} */
+  canvasSize
 
   /**
+   * @param {Dimentions} canvasSize
    * @param {number} speed 
    */
-  constructor(screenWidth, screenHeight, speed) {
-    this.screenWidth = screenWidth
-    this.screenHeight = screenHeight
-
+  constructor(canvasSize, speed) {
+    this.canvasSize = canvasSize
     this.#xSpeed = random(-1 * speed, speed) || random(-1 * speed, speed)
     this.#ySpeed = random(-1 * speed, speed) || random(-1 * speed, speed)
   }
@@ -66,11 +65,11 @@ export class ParticleWalker {
     particle.position.x += this.#xSpeed
     particle.position.y += this.#ySpeed
 
-    if (particle.position.x < 0 || particle.position.x > this.screenWidth) {
+    if (particle.position.x < 0 || particle.position.x > this.canvasSize.width) {
       this.#xSpeed *= -1
     }
 
-    if (particle.position.y < 0 || particle.position.y > this.screenHeight) {
+    if (particle.position.y < 0 || particle.position.y > this.canvasSize.height) {
       this.#ySpeed *= -1
     }
   }
