@@ -53,5 +53,5 @@ export class Color {
 export const Colors = {
   Red: new Color(152, 60, 91),
   Orange: new Color(248, 121, 3),
-  OrangeTransparent: new Color(248, 121, 3, 0.01),
+  OrangeTransparent: new Color(76, 37, 1),
 }

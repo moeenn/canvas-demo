@@ -13,13 +13,18 @@ async function main() {
   const canvas = document.querySelector("canvas")
   assert(canvas != null, "canvas element not found")
 
-  const startButton = /** @type {HTMLButtonElement | null} */ (document.querySelector("[data-button-start]"))
-  assert(startButton != null, "start button not found")
+  const form = /** @type {HTMLFormElement | null} */ (document.querySelector("[data-form]"))
+  assert(form != null, "data form not found")
+
+  const submitButton = /** @type {HTMLButtonElement | null} */ (document.querySelector("[data-submit-button]"))
+  assert(submitButton != null, "form submit button not found")
 
   const { ctx, width, height } = getContext(canvas)
   const canvasSize = new Dimentions(width, height)
 
-  startButton.addEventListener("click", async () => {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault()
+
     const speed = parseFloat(readInput("[data-speed]"))
     const particleCount = parseFloat(readInput("[data-particle-count]"))
     const distanceThreshold = parseFloat(readInput("[data-distance-threshold]"))
@@ -40,9 +45,7 @@ async function main() {
     /** @type {Particle} */
     let particle
 
-    startButton.disabled = true
-    while (true) {
-      await sleep(16.6) // 60 FPS
+    const draw = () => {
       ctx.clearRect(0, 0, width, height)
 
       for (i = 0; i < particleCount; i++) {
@@ -51,6 +54,12 @@ async function main() {
         particle.render(ctx)
         walkers[i].walkParticle(particle)
       }
+    }
+
+    submitButton.disabled = true
+    while (true) {
+      draw()
+      await sleep(12)
     }
   })
 }
