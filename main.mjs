@@ -13,13 +13,18 @@ async function main() {
   const canvas = document.querySelector("canvas")
   assert(canvas != null, "canvas element not found")
 
-  const startButton = /** @type {HTMLButtonElement | null} */ (document.querySelector("[data-button-start]"))
-  assert(startButton != null, "start button not found")
+  const dialog = /** @type {HTMLDivElement | null} */ (document.querySelector("[data-dialog]"))
+  assert(dialog != null, "dialog element not found")
+
+  const controlsForm = /** @type {HTMLFormElement | null} */ (document.querySelector("[data-controls-form]"))
+  assert(controlsForm != null, "start button not found")
 
   const { ctx, width, height } = getContext(canvas)
   const canvasSize = new Dimentions(width, height)
 
-  startButton.addEventListener("click", async () => {
+  controlsForm.addEventListener("submit", async (e) => {
+    e.preventDefault()
+
     const speed = parseFloat(readInput("[data-speed]"))
     const particleCount = parseFloat(readInput("[data-particle-count]"))
     const distanceThreshold = parseFloat(readInput("[data-distance-threshold]"))
@@ -40,7 +45,7 @@ async function main() {
     /** @type {Particle} */
     let particle
 
-    startButton.disabled = true
+    dialog.classList.add("hidden")
     while (true) {
       await sleep(16.6) // 60 FPS
       ctx.clearRect(0, 0, width, height)

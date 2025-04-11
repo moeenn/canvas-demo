@@ -9,11 +9,25 @@
 </head>
 <body>
   <main>
-    <div id="toolbar">
-      <button data-button-start>Start</button>
-      <input data-particle-count type="number" placeholder="Particles #" min="2" value="70" />
-      <input data-speed type="number" placeholder="Speed" min="2" value="4" />
-      <input data-distance-threshold type="number" placeholder="Distance threshold" min="5" value="100" />
+    <div data-dialog id="dialog">
+      <form data-controls-form>
+        <fieldset>
+          <label for="particle-count">Particle count</label>
+          <input data-particle-count id="particle-count" type="number" min="2" value="70" />
+        </fieldset>
+
+        <fieldset>
+          <label for="speed">Speed</label>
+          <input data-speed id="speed" type="number" min="1" value="2" />
+        </fieldset>
+
+        <fieldset>
+          <label for="distance-threshold">Distance threshold</label>
+          <input data-distance-threshold id="distance-threshold" type="number" min="5" value="100" />
+        </fieldset>
+
+        <button type="submit">Start</button>
+      </form>
     </div>
     <canvas data-output></canvas>
   </main>
