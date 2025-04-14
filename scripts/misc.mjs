@@ -33,14 +33,6 @@ export function random(min, max) {
 }
 
 /**
- * @param {number} ms
- * @returns {Promise<void>}
- */
-export function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-/**
  * @param {boolean} condition 
  * @param {string} error 
  * @returns {asserts condition}

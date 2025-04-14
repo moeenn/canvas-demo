@@ -1,5 +1,5 @@
 //@ts-check
-import { getContext, assert, sleep, readInput } from "./scripts/misc.mjs"
+import { getContext, assert, readInput } from "./scripts/misc.mjs"
 import { Particle, ParticleWalker } from "./scripts/particle.mjs"
 import { Dimentions } from "./scripts/dimentions.mjs"
 import { Line } from "./scripts/line.mjs"
@@ -46,8 +46,8 @@ async function main() {
     let particle
 
     dialog.classList.add("hidden")
-    while (true) {
-      await sleep(16.6) // 60 FPS
+
+    const renderLoop = () => {
       ctx.clearRect(0, 0, width, height)
 
       for (i = 0; i < particleCount; i++) {
@@ -56,7 +56,11 @@ async function main() {
         particle.render(ctx)
         walkers[i].walkParticle(particle)
       }
+
+      window.requestAnimationFrame(renderLoop)      
     }
+
+    window.requestAnimationFrame(renderLoop)
   })
 }
 
